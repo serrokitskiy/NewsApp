@@ -14,8 +14,8 @@ class LoginScreenViewModel : ViewModel() {
 
     fun onEvent(event: LoginScreenEvent) {
         when (event) {
-            is LoginScreenEvent.EmailUpdated -> this.state = state.copy(email = event.newEmail)
-            is LoginScreenEvent.PasswordUpdated -> this.state = state.copy(password = event.newPassword)
+            is LoginScreenEvent.EmailUpdated -> state = state.copy(email = event.newEmail)
+            is LoginScreenEvent.PasswordUpdated -> state = state.copy(password = event.newPassword)
         }
     }
 
