@@ -4,20 +4,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import dev.rokitskiy.newsapp.presentation.screen.state.LoginScreenEvent
+import dev.rokitskiy.newsapp.presentation.screen.state.LoginScreenState
 
 class LoginScreenViewModel : ViewModel() {
-    var email by mutableStateOf("")
+     var state by mutableStateOf(LoginScreenState())
         private set
 
-    var password by mutableStateOf("")
-        private set
 
-    fun updateEmail(newEmail: String) {
-        this.email = newEmail
-    }
-    fun updatePassword(newPassword: String) {
-        this.password = newPassword
-
+    fun onEvent(event: LoginScreenEvent) {
+        when (event) {
+            is LoginScreenEvent.EmailUpdated -> this.state = state.copy(email = event.newEmail)
+            is LoginScreenEvent.PasswordUpdated -> this.state = state.copy(password = event.newPassword)
+        }
     }
 
 }

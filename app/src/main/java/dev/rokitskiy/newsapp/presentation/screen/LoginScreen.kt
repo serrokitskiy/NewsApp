@@ -28,16 +28,31 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.rokitskiy.newsapp.R
 import dev.rokitskiy.newsapp.presentation.navigation.Screen
+import dev.rokitskiy.newsapp.presentation.screen.state.LoginScreenEvent
+import dev.rokitskiy.newsapp.presentation.screen.state.LoginScreenState
 import dev.rokitskiy.newsapp.presentation.screen.viewmodel.LoginScreenViewModel
 import dev.rokitskiy.newsapp.presentation.ui.component.StyledButton
 import javax.security.auth.callback.PasswordCallback
 
 @Composable
 fun LoginScreen(
-    onNavigateTo: (Screen) -> Unit = {},
-    viewModel: LoginScreenViewModel = viewModel()
-
+    onNavigateTo: (Screen) -> Unit
 ) {
+    val viewModel = viewModel<LoginScreenViewModel>()
+    LoginView(
+        state = viewModel.state,
+        onEvent = viewModel::onEvent,
+        onNavigateTo = onNavigateTo
+    )
+}
+
+@Composable
+fun LoginView(
+    onNavigateTo: (Screen) -> Unit = {},
+    state: LoginScreenState = LoginScreenState(),
+    onEvent: (LoginScreenEvent) -> Unit = {}
+
+    ) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -56,8 +71,10 @@ fun LoginScreen(
         )
         OutlinedTextField(
             modifier = Modifier.padding(top = 180.dp),
-            value = viewModel.email,
-            onValueChange = viewModel::updateEmail,
+            value = state.email,
+            onValueChange = {
+                onEvent(LoginScreenEvent.EmailUpdated(it))
+            },
             leadingIcon = {
                 Icon(
                     painter = rememberVectorPainter(image = Icons.Outlined.Email),
@@ -69,8 +86,10 @@ fun LoginScreen(
             }
         )
         OutlinedTextField(
-            value = viewModel.password,
-            onValueChange = viewModel::updatePassword,
+            value = state.password,
+            onValueChange = {
+                onEvent(LoginScreenEvent.PasswordUpdated(it))
+            },
             leadingIcon = {
                 Icon(
                     painter = rememberVectorPainter(image = Icons.Outlined.Lock),
@@ -108,5 +127,5 @@ fun LoginScreen(
 @Composable
 @Preview(showBackground = true)
 fun LoginScreenPreview() {
-    LoginScreen()
+    LoginView()
 }
